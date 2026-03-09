@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: "https://task-server-1-vsbe.onrender.com",
         changeOrigin: true
       }
     }
