@@ -8,8 +8,25 @@ const OfferPopup = () => {
 
   useEffect(() => {
 
-    axios.get("/api/campaign/active")
-      .then(res => setCampaign(res.data.data));
+    const fetchCampaign = async () => {
+
+      try {
+
+        const res = await axios.get("/api/campaign/active");
+
+        console.log("Campaign:", res.data);
+
+        setCampaign(res.data.data);
+
+      } catch (error) {
+
+        console.error("Error fetching campaign:", error);
+
+      }
+
+    };
+
+    fetchCampaign();
 
   }, []);
 
@@ -33,6 +50,7 @@ const OfferPopup = () => {
           <img
             src={campaign.popupDesktopImage}
             className="w-[400px]"
+            alt="Offer Popup"
           />
 
         </a>
@@ -42,6 +60,7 @@ const OfferPopup = () => {
     </div>
 
   );
+
 };
 
 export default OfferPopup;

@@ -1,15 +1,24 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import {
+  Calendar,
+  Settings,
+  Layout,
+  Monitor,
+  Sparkles,
+  Link,
+  Image
+} from "lucide-react";
 
 const CreateCampaign = () => {
 
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch, formState:{isSubmitting} } = useForm({
     defaultValues: {
       isActive: true,
       showPopup: false,
       showMarquee: false,
-      marqueeColor: "#000000",
+      marqueeColor: "#6366f1",
       marqueeGradient: ""
     }
   });
@@ -20,15 +29,13 @@ const CreateCampaign = () => {
 
       await axios.post("/api/campaign/create", data);
 
-      toast.success("Campaign Created Successfully");
+      toast.success("Campaign Created Successfully 🚀");
 
       window.location.reload();
 
     } catch (error) {
 
       toast.error("Failed to create campaign");
-
-      console.error(error);
 
     }
 
@@ -37,27 +44,27 @@ const CreateCampaign = () => {
   const marqueeText = watch("marqueeText");
   const marqueeColor = watch("marqueeColor");
   const marqueeGradient = watch("marqueeGradient");
+  const showMarquee = watch("showMarquee");
+  const showPopup = watch("showPopup");
 
   return (
 
-    <div className="bg-gray-100 p-10 flex justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 flex justify-center items-center p-10">
 
-      <div className="bg-white w-[900px] rounded-lg shadow-lg p-8">
+      <div className="bg-white/80 backdrop-blur-lg w-[950px] rounded-2xl shadow-2xl p-10 border">
 
-        <h1 className="text-2xl font-bold mb-6">
-          Campaign Manager
+        <h1 className="text-3xl font-bold mb-8 flex items-center gap-3 text-gray-800">
+          <Sparkles className="text-indigo-600"/> Campaign Manager
         </h1>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
 
-          {/* Campaign Schedule */}
-          <div>
+          {/* SCHEDULE */}
 
-            <h3 className="font-semibold mb-2">
-              Campaign Schedule
+          <div className="bg-white p-6 rounded-xl shadow-sm border">
+
+            <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+              <Calendar size={18}/> Campaign Schedule
             </h3>
 
             <div className="grid grid-cols-2 gap-4">
@@ -65,39 +72,40 @@ const CreateCampaign = () => {
               <input
                 type="datetime-local"
                 {...register("activeFrom")}
-                className="border p-2 rounded"
+                className="border p-3 rounded-lg w-full"
               />
 
               <input
                 type="datetime-local"
                 {...register("activeTill")}
-                className="border p-2 rounded"
+                className="border p-3 rounded-lg w-full"
               />
 
             </div>
 
           </div>
 
-          {/* Status */}
-          <div>
+          {/* STATUS */}
 
-            <h3 className="font-semibold mb-2">
-              Status
+          <div className="bg-white p-6 rounded-xl shadow-sm border">
+
+            <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+              <Settings size={18}/> Status Controls
             </h3>
 
-            <div className="flex gap-6">
+            <div className="flex gap-10 text-sm">
 
-              <label className="flex gap-2">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" {...register("isActive")} />
-                Active
+                Active Campaign
               </label>
 
-              <label className="flex gap-2">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" {...register("showPopup")} />
                 Show Popup
               </label>
 
-              <label className="flex gap-2">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" {...register("showMarquee")} />
                 Show Marquee
               </label>
@@ -106,47 +114,68 @@ const CreateCampaign = () => {
 
           </div>
 
-          {/* Marquee Settings */}
-          <div>
+          {/* MARQUEE SETTINGS */}
 
-            <h3 className="font-semibold mb-2">
-              Marquee Settings
+          {showMarquee && (
+
+          <div className="bg-white p-6 rounded-xl shadow-sm border">
+
+            <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+              <Layout size={18}/> Marquee Settings
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
 
-              <input
-                placeholder="Marquee Text"
-                {...register("marqueeText")}
-                className="border p-2 rounded w-full"
-              />
+              <div className="relative">
 
-              <input
-                placeholder="Marquee Link"
-                {...register("marqueeLink")}
-                className="border p-2 rounded w-full"
-              />
+                <Sparkles className="absolute left-3 top-3 text-gray-400"/>
 
-              <div className="grid grid-cols-2 gap-4">
+                <input
+                  placeholder="Marquee Text"
+                  {...register("marqueeText")}
+                  className="border p-3 pl-10 rounded-lg w-full"
+                />
+
+              </div>
+
+              <div className="relative">
+
+                <Link className="absolute left-3 top-3 text-gray-400"/>
+
+                <input
+                  placeholder="Marquee Link"
+                  {...register("marqueeLink")}
+                  className="border p-3 pl-10 rounded-lg w-full"
+                />
+
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
 
                 <div>
-                  <label>Solid Color</label>
+                  <label className="text-sm font-medium">
+                    Solid Color
+                  </label>
 
                   <input
                     type="color"
                     {...register("marqueeColor")}
-                    className="w-full h-10"
+                    className="w-full h-12 mt-1"
                   />
                 </div>
 
                 <div>
-                  <label>Gradient Color</label>
+
+                  <label className="text-sm font-medium">
+                    Gradient
+                  </label>
 
                   <input
                     placeholder="linear-gradient(...)"
                     {...register("marqueeGradient")}
-                    className="border p-2 rounded w-full"
+                    className="border p-3 rounded-lg w-full mt-1"
                   />
+
                 </div>
 
               </div>
@@ -155,15 +184,20 @@ const CreateCampaign = () => {
 
           </div>
 
-          {/* Marquee Preview */}
-          <div>
+          )}
 
-            <h3 className="font-semibold mb-2">
-              Marquee Preview
+          {/* PREVIEW */}
+
+          {showMarquee && (
+
+          <div className="bg-white p-6 rounded-xl shadow-sm border">
+
+            <h3 className="font-semibold text-lg mb-4">
+              Live Marquee Preview
             </h3>
 
             <div
-              className="p-3 text-white rounded"
+              className="p-4 rounded-lg text-white text-center font-semibold"
               style={{
                 background: marqueeGradient || marqueeColor
               }}
@@ -175,44 +209,71 @@ const CreateCampaign = () => {
 
           </div>
 
-          {/* Popup Settings */}
-          <div>
+          )}
 
-            <h3 className="font-semibold mb-2">
-              Popup Settings
+          {/* POPUP SETTINGS */}
+
+          {showPopup && (
+
+          <div className="bg-white p-6 rounded-xl shadow-sm border">
+
+            <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+              <Monitor size={18}/> Popup Settings
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
 
-              <input
-                placeholder="Popup Desktop Image URL"
-                {...register("popupDesktopImage")}
-                className="border p-2 rounded w-full"
-              />
+              <div className="relative">
 
-              <input
-                placeholder="Popup Mobile Image URL"
-                {...register("popupMobileImage")}
-                className="border p-2 rounded w-full"
-              />
+                <Image className="absolute left-3 top-3 text-gray-400"/>
 
-              <input
-                placeholder="Popup Click URL"
-                {...register("popupClickUrl")}
-                className="border p-2 rounded w-full"
-              />
+                <input
+                  placeholder="Popup Desktop Image URL"
+                  {...register("popupDesktopImage")}
+                  className="border p-3 pl-10 rounded-lg w-full"
+                />
+
+              </div>
+
+              <div className="relative">
+
+                <Image className="absolute left-3 top-3 text-gray-400"/>
+
+                <input
+                  placeholder="Popup Mobile Image URL"
+                  {...register("popupMobileImage")}
+                  className="border p-3 pl-10 rounded-lg w-full"
+                />
+
+              </div>
+
+              <div className="relative">
+
+                <Link className="absolute left-3 top-3 text-gray-400"/>
+
+                <input
+                  placeholder="Popup Click URL"
+                  {...register("popupClickUrl")}
+                  className="border p-3 pl-10 rounded-lg w-full"
+                />
+
+              </div>
 
             </div>
 
           </div>
 
-          {/* Submit */}
+          )}
+
+          {/* SUBMIT */}
+
           <div className="flex justify-end">
 
             <button
-              className="bg-indigo-600 text-white px-6 py-2 rounded"
+              disabled={isSubmitting}
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-10 py-3 rounded-lg font-semibold"
             >
-              Create Campaign
+              {isSubmitting ? "Creating..." : "Create Campaign 🚀"}
             </button>
 
           </div>
